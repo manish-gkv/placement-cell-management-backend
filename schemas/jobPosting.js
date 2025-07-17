@@ -7,6 +7,7 @@ const jobPostingSchema = new mongoose.Schema({
   jobTitle: { type: String, required: true },
   description: String,
   ctc: String,
+  ctcBreakup: String,
   location: String,
   eligibleCourses: [String],
   elifigibleStreams: [String],

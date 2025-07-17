@@ -19,7 +19,7 @@ const jobPostingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 },{timestamps: true});
 
-jobPostingSchema.plugin(AutoIncrement, { inc_field: 'id', start_seq: 1 });
+jobPostingSchema.plugin(AutoIncrement, { inc_field: 'jobId', start_seq: 1 });
 
 const JobPosting = mongoose.model('JobPosting', jobPostingSchema);
 export default JobPosting;

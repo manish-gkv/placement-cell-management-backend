@@ -12,7 +12,7 @@ const companySchema = new mongoose.Schema({
   isApproved: { type: Boolean, default: false }
 }, {timestamps: true});
 
-companySchema.plugin(AutoIncrement, { inc_field: 'id', start_seq: 1 });
+companySchema.plugin(AutoIncrement, { inc_field: 'companyId', start_seq: 1 });
 
 const Company = mongoose.model('Company', companySchema);
 export default Company;

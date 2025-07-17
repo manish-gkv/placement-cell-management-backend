@@ -12,7 +12,7 @@ const jobApplicationSchema = new mongoose.Schema({
   status: { type: String, enum: ['applied', 'shortlisted', 'selected', 'rejected'], default: 'applied' }
 }, { timestamps: true});
 
-jobApplicationSchema.plugin(AutoIncrement, { inc_field: 'id', start_seq: 10000*getCurrAcademicYear()+1});
+jobApplicationSchema.plugin(AutoIncrement, { inc_field: 'applicationId', start_seq: 10000*getCurrAcademicYear()+1});
 
 const JobApplication = mongoose.model('JobApplication', jobApplicationSchema);
 export default JobApplication;

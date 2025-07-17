@@ -10,9 +10,7 @@ const studentSchema = new mongoose.Schema({
   cgpa: Number,
   resumeLink: String,
   isVerified: { type: Boolean, default: false }
-});
+}, { timestamps: true });
 
 const Student = mongoose.model('Students', studentSchema);
 export default Student;
-
-console.log(new Student({ name: 'John Doe', rollNumber: '12345', branch: 'CSE', yearOfPassing: 2024, cgpa: 8.5 }));

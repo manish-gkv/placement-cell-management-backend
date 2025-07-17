@@ -1,12 +1,11 @@
 import express from 'express';
-import adminRepository from './repository/admin.js';
-import userRepository from './repository/user.js';
-import companyRepository from './repository/company.js';
-import jobApplicationRepository from './repository/jobApplication.js';
-import jobPostingRepository from './repository/jobPosting.js';
-import studentRepository from './repository/student.js';
+
+import connectDatabase from './config/database.js';
+
 const App = express();
 
-App.listen(3000, () => {
+App.listen(3000, async () => {
+  await connectDatabase();
   console.log('Server is running on port 3000');
+  
 });

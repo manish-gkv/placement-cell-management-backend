@@ -57,6 +57,12 @@ export async function getStudentByRollNumberController(req, res) {
 
 export async function createStudentController(req, res) {
     const user = req.user;
+    if(user.role !== "student"){
+        // Only student can create their own profile
+        return res.status(StatusCodes.FORBIDDEN).json({
+            message: "You do not have permission to create a student profile."
+        });
+    }
     try{
         const studentData = req.body;
         const student = await createStudentService(user, studentData);

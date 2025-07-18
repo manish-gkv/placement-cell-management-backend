@@ -3,6 +3,7 @@ import crudRepository from './crud.js';
 
 const studentRepository = {
     ...crudRepository(Student),
+    
 }
 
 export default studentRepository;

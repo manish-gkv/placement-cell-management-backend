@@ -34,10 +34,9 @@ export async function createStudentService(user, studentData) {
     }
 }
 
-export async function updateStudentService(studentData){
+export async function updateStudentService(rollNumber, studentData){
     try{
-        const rollNumber = studentData.rollNumber;
-        const student = await studentRepository.update({ rollNumber }, studentData);
+        const student = await studentRepository.findOneAndUpdate({ rollNumber }, studentData);
         return student;
     }
     catch (error) {

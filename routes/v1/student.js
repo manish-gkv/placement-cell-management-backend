@@ -12,6 +12,6 @@ const router = Router();
 router.get("/", getAllStudentsController);
 router.get("/:rollNumber", getStudentByRollNumberController);
 router.post("/", createStudentController);
-router.put("/", updateStudentController);
+router.put("/:rollNumber", updateStudentController);
 
 export default router;

@@ -33,12 +33,6 @@ export async function getAllStudentsController(req, res) {
 
 export async function getStudentByRollNumberController(req, res) {
     const user = req.user;
-    if(user.role !== "admin" && user.role !== "company"){
-        // Only admin and company can access see student by roll number
-        return res.status(StatusCodes.FORBIDDEN).json({
-            message: "You do not have permission to access this resource."
-        });
-    }
     const { rollNumber } = req.params;
     try {
         const student = await getStudentByRollNumberService(rollNumber);
@@ -84,8 +78,9 @@ export async function updateStudentController(req, res) {
         });
     }
     try {
+        const { rollNumber } = req.params;
         const studentData = req.body;
-        const updatedStudent = await updateStudentService(studentData);
+        const updatedStudent = await updateStudentService(rollNumber,studentData);
         return res.status(StatusCodes.OK).json(successResponse(updatedStudent, "Student updated successfully"));
     } catch (error) {
         console.error("Error updating student:", error);

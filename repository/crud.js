@@ -33,6 +33,12 @@ export default function crudRepository(model) {
                 }
             });
             return response;
+        },
+        findOneAndUpdate: async function (query, data) {
+            const updatedDoc = await model.findOneAndUpdate(query, data, {
+                new: true
+            });
+            return updatedDoc;
         }
     };
 }

@@ -1,11 +1,20 @@
 import express from 'express';
 
 import connectDatabase from './config/database.js';
+import { PORT } from './utils/constant.js';
 
 const App = express();
 
-App.listen(3000, async () => {
-  await connectDatabase();
-  console.log('Server is running on port 3000');
-  
-});
+const startServer = async () => {
+  try{
+    await connectDatabase();
+    App.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  }
+  catch(error) {
+    console.error('Error starting server:', error);
+  }
+}
+
+startServer();

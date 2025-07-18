@@ -9,5 +9,6 @@ export default async function connectDatabase() {
     }
     catch(error) {
         console.error('Database connection failed:', error);
+        throw error;
     }
 }

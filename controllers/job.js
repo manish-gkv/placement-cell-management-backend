@@ -112,7 +112,6 @@ export async function applyJobController(req, res) {
     let { jobId } = req.params;
     jobId = parseInt(jobId);
     const user = req.user;
-    console.log(user);
     if (user.role !== "student") {
         return res.status(StatusCodes.FORBIDDEN).json(customErrorResponse({
             message: "Forbidden", explanation: "You do not have permission to apply for this job."

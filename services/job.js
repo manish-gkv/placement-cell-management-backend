@@ -57,7 +57,6 @@ export async function deleteJobService(jobId) {
 export async function applyJobService(user, jobId) {
     try {
         const student = await studentRepository.get({user});
-        console.log(student);
         const job = await jobPostingRepository.get({jobId});
         if (!job) {
             throw new Error("Job not found");

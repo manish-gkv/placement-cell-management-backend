@@ -11,7 +11,8 @@ import {
     getJobByIdService,
     createJobService,
     updateJobService,
-    deleteJobService
+    deleteJobService,
+    applyJobService
 } from "../services/job.js";
 
 export async function getAllJobsController(req, res) {
@@ -103,6 +104,30 @@ export async function deleteJobController(req, res) {
         return res.status(StatusCodes.OK).json(successResponse(deletedJob, "Job deleted successfully"));
     } catch (error) {
         console.error("Error deleting job:", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
+    }
+}
+
+export async function applyJobController(req, res) {
+    let { jobId } = req.params;
+    jobId = parseInt(jobId);
+    const user = req.user;
+    console.log(user);
+    if (user.role !== "student") {
+        return res.status(StatusCodes.FORBIDDEN).json(customErrorResponse({
+            message: "Forbidden", explanation: "You do not have permission to apply for this job."
+        }));
+    }
+    try {
+        const applicationResult = await applyJobService(user, jobId);
+        if (!applicationResult) {
+            return res.status(StatusCodes.NOT_FOUND).json(customErrorResponse({
+                message: "Job not found", explanation: "No job found with the provided ID."
+            }));
+        }
+        return res.status(StatusCodes.OK).json(successResponse(applicationResult, "Successfully applied for the job"));
+    } catch (error) {
+        console.error("Error applying for job:", error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
     }
 }

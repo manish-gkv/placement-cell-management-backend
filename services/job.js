@@ -1,5 +1,7 @@
 import companyRepository from '../repository/company.js';
 import jobPostingRepository from '../repository/jobPosting.js';
+import studentRepository from '../repository/student.js';
+import jobApplicationRepository from '../repository/jobApplication.js';
 
 export async function getAllJobsService() {
     try {
@@ -48,6 +50,21 @@ export async function deleteJobService(jobId) {
         return await jobPostingRepository.findOneAndDelete({jobId});
     } catch (error) {
         console.error("Error in deleteJobService:", error);
+        throw error;
+    }
+}
+
+export async function applyJobService(user, jobId) {
+    try {
+        const student = await studentRepository.get({user});
+        console.log(student);
+        const job = await jobPostingRepository.get({jobId});
+        if (!job) {
+            throw new Error("Job not found");
+        }
+        return await jobApplicationRepository.create({student, job, appliedAt: new Date(), status: 'applied'});
+    } catch (error) {
+        console.error("Error in applyJobService:", error);
         throw error;
     }
 }

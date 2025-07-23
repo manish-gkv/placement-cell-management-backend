@@ -33,10 +33,18 @@ export async function signInService(email) {
 export async function getProfileService(user) {
     try {
         if(user.role === "student") {
-            return await studentRepository.get({user:user._id});
+            const profile =  await studentRepository.get({ user: user._id });
+            if (!profile) {
+                return null;
+            }
+            return profile;
         }
         if(user.role === "company") {
-            return await companyRepository.get({user:user._id});
+            const profile =  await companyRepository.get({ user: user._id });
+            if (!profile) {
+                return null;
+            }
+            return profile;
         }
     } catch (error) {
         console.error("getProfileService error:", error);

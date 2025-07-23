@@ -10,7 +10,6 @@ import {
 import { signUpService, signInService } from "../services/user.js";
 import { getProfileService } from "../services/user.js";
 import { JWT_SECRET } from "../utils/constant.js";
-import e from "express";
 
 export async function signUpController(req, res) {
     try {
@@ -51,6 +50,7 @@ export async function signInController(req, res) {
             role: user.role,
             _id: user._id
         };
+
         return res.status(StatusCodes.OK).json(successResponse({...data, token}, "User signed in successfully"));
     } catch (error) {
         console.error("signInController error:", error);
@@ -68,6 +68,13 @@ export async function getProfileController(req, res) {
             }));
         }
         const profile = await getProfileService(user);
+        //console.log("Profile:", profile);
+        if (!profile) {
+            return res.status(StatusCodes.NOT_FOUND).json(customErrorResponse({
+                message: "Profile not found",
+                explanation: "The requested profile does not exist."
+            }));
+        }
         return res.status(StatusCodes.OK).json(successResponse(profile, "Profile fetched successfully"));
     } catch (error) {
         console.error("getProfileController error:", error);

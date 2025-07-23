@@ -35,8 +35,6 @@ export async function signUpController(req, res) {
 export async function signInController(req, res) {
     try {
         const { email, password } = req.body;
-        const passwordHash = await bcrypt.hash(password, 10);
-        console.log("Password Hash:", passwordHash);
         const user = await signInService(email);
         if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
             return res.status(StatusCodes.UNAUTHORIZED).json(customErrorResponse({

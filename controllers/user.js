@@ -8,7 +8,9 @@ import {
     internalErrorResponse
 } from "../utils/common/response.js";
 import { signUpService, signInService } from "../services/user.js";
+import { getProfileService } from "../services/user.js";
 import { JWT_SECRET } from "../utils/constant.js";
+import e from "express";
 
 export async function signUpController(req, res) {
     try {
@@ -56,3 +58,19 @@ export async function signInController(req, res) {
     }
 }
 
+export async function getProfileController(req, res) {
+    const user = req.user;
+    try {
+        if (!user) {
+            return res.status(StatusCodes.UNAUTHORIZED).json(customErrorResponse({
+                message: "Unauthorized",
+                explanation: "You must be logged in to view this profile."
+            }));
+        }
+        const profile = await getProfileService(user);
+        return res.status(StatusCodes.OK).json(successResponse(profile, "Profile fetched successfully"));
+    } catch (error) {
+        console.error("getProfileController error:", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
+    }
+}

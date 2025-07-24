@@ -3,9 +3,12 @@ import jobPostingRepository from '../repository/jobPosting.js';
 import studentRepository from '../repository/student.js';
 import jobApplicationRepository from '../repository/jobApplication.js';
 
-export async function getAllJobsService() {
+export async function getAllJobsService(query) {
     try {
-        return await jobPostingRepository.getAll();
+        if (Object.keys(query).length === 0) {
+            return await jobPostingRepository.getAll();
+        }
+        return await jobPostingRepository.get({...query});
     } catch (error) {
         console.error("Error in getAllJobsService:", error);
         throw error;

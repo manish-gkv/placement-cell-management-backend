@@ -8,7 +8,7 @@ export async function getAllJobsService(query) {
         if (Object.keys(query).length === 0) {
             return await jobPostingRepository.getAll();
         }
-        return await jobPostingRepository.get({...query});
+        return await jobPostingRepository.findAll({...query});
     } catch (error) {
         console.error("Error in getAllJobsService:", error);
         throw error;

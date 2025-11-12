@@ -43,6 +43,10 @@ export default function crudRepository(model) {
         findOneAndDelete: async function (query) {
             const deletedDoc = await model.findOneAndDelete(query);
             return deletedDoc;
-        }
+        },
+        findAll: async function (query) {
+            const docs = await model.find(query);
+            return docs;
+        },
     };
 }

@@ -18,9 +18,7 @@ import {
 export async function getAllJobsController(req, res) {
     try {
         const query = req.query || {};
-        console.log("Query parameters:", query);
         const jobs = await getAllJobsService(query);
-        console.log("Jobs fetched:", jobs);
         return res.status(StatusCodes.OK).json(successResponse(jobs, "Jobs fetched successfully"));
     } catch (error) {
         console.error("Error fetching jobs:", error);

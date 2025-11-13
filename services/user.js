@@ -1,7 +1,8 @@
 import userRepository from "../repository/user.js";
 import companyRepository from "../repository/company.js";
 import studentRepository from "../repository/student.js";
-
+import { createStudentService } from "./student.js";
+import { RANDOM_PASSWORD } from "../utils/constant.js";
 export async function signUpService({ email, passwordHash, role }) {
     try {
         const user = await userRepository.create({
@@ -48,6 +49,28 @@ export async function getProfileService(user) {
         }
     } catch (error) {
         console.error("getProfileService error:", error);
+        throw error;
+    }
+}
+
+export async function googleUserService({ userInfo, role }) {
+    try {
+        const email = userInfo.email;
+        let user = await userRepository.get({ email});
+        if (user) {
+            return user;
+        }
+        
+        user = await userRepository.create({
+            email,
+            passwordHash: RANDOM_PASSWORD,
+            role
+        });
+        if(role === "student") await createStudentService(user, {name: userInfo.name, rollNumber: email.split("@")[0]});
+
+        return user;
+    } catch (error) {
+        console.error("googleUserService error:", error);
         throw error;
     }
 }

@@ -11,6 +11,9 @@ import { signUpService, signInService } from "../services/user.js";
 import { getProfileService } from "../services/user.js";
 import { JWT_SECRET } from "../utils/constant.js";
 
+import client from "../utils/googleClient.js";
+import { googleUserService } from "../services/user.js";
+
 export async function signUpController(req, res) {
     try {
         const { email, password, role } = req.body;
@@ -76,6 +79,23 @@ export async function getProfileController(req, res) {
         return res.status(StatusCodes.OK).json(successResponse(profile, "Profile fetched successfully"));
     } catch (error) {
         console.error("getProfileController error:", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
+    }
+}
+
+export async function googleAuthController(req, res) {
+    try {
+        const token = req.query.token;
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+        });
+        const userInfo = ticket.getPayload();
+        let user = await googleUserService({userInfo:userInfo, role: "student" });
+        const userToken = jwt.sign({ email: user.email, role: user.role, _id:user._id }, JWT_SECRET, { expiresIn: '24h' });
+        return res.status(StatusCodes.OK).json(successResponse({...user, token: userToken}, "User signed in with Google successfully"));
+    } catch (error) {
+        console.error("googleAuthController error:", error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
     }
 }

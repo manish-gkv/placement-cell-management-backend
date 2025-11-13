@@ -9,6 +9,7 @@ const companySchema = new mongoose.Schema({
   industryType: String,
   contactPerson: String,
   contactEmail: String,
+  logoUrl: String,
   isApproved: { type: Boolean, default: false }
 }, {timestamps: true});
 

@@ -93,7 +93,12 @@ export async function googleAuthController(req, res) {
         const userInfo = ticket.getPayload();
         let user = await googleUserService({userInfo:userInfo, role: "student" });
         const userToken = jwt.sign({ email: user.email, role: user.role, _id:user._id }, JWT_SECRET, { expiresIn: '24h' });
-        return res.status(StatusCodes.OK).json(successResponse({...user, token: userToken}, "User signed in with Google successfully"));
+        const data = {
+            email: user.email,
+            role: user.role,
+            _id: user._id
+        };
+        return res.status(StatusCodes.OK).json(successResponse({...data, token: userToken}, "User signed in with Google successfully"));
     } catch (error) {
         console.error("googleAuthController error:", error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));

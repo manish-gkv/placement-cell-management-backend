@@ -17,7 +17,7 @@ export async function getAllJobsService(query) {
 
 export async function getJobByIdService(jobId) {
     try {
-        return await jobPostingRepository.get({jobId});
+        return await jobPostingRepository.get({jobId: jobId});
     } catch (error) {
         console.error("Error in getJobByIdService:", error);
         throw error;
@@ -82,6 +82,30 @@ export async function getApplicationStatusService(user, jobId) {
         return application ? "applied" : null;
     } catch (error) {
         console.error("Error in getApplicationStatusService:", error);
+        throw error;
+    }
+}
+
+export async function getAppliedJobsService(user) {
+    try {
+        const student = await studentRepository.get({user});
+        const applied = await jobApplicationRepository.findAll({student});
+        const detailedApplications = await Promise.all(applied.map(async (application) => {
+            console.log(application);
+            const job = await jobPostingRepository.get({_id: application.job});
+            console.log(job);
+            const company = await companyRepository.get({ _id: job.company });
+            return {
+                applicationId: application.applicationId,
+                jobTitle: job.jobTitle,
+                companyName: company.companyName,
+                dateApplied: application.appliedAt,
+                status: application.status
+            };
+        }));
+        return detailedApplications;
+    } catch (error) {
+        console.error("Error in getAppliedJobsService:", error);
         throw error;
     }
 }

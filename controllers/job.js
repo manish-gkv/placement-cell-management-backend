@@ -13,7 +13,8 @@ import {
     updateJobService,
     deleteJobService,
     applyJobService,
-    getApplicationStatusService
+    getApplicationStatusService,
+    getAppliedJobsService
 } from "../services/job.js";
 
 export async function getAllJobsController(req, res) {
@@ -151,6 +152,22 @@ export async function applyStatusController(req, res) {
         return res.status(StatusCodes.OK).json(successResponse(applicationStatus, "Application status retrieved successfully"));
     } catch (error) {
         console.error("Error retrieving application status:", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
+    }
+}
+
+export async function getAllAppliedJobsController(req, res) {
+    const user = req.user;
+    if (user.role !== "student") {
+        return res.status(StatusCodes.FORBIDDEN).json(customErrorResponse({
+            message: "Forbidden", explanation: "You do not have permission to view applied jobs."
+        }));
+    }
+    try {
+        const data = await getAppliedJobsService(user);
+        return res.status(StatusCodes.OK).json(successResponse(data, "Applied jobs retrieved successfully"));
+    } catch (error) {
+        console.error("Error retrieving applied jobs:", error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
     }
 }

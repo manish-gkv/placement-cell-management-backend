@@ -6,10 +6,12 @@ import{
     updateJobController,
     deleteJobController,
     applyJobController,
-    applyStatusController
+    applyStatusController,
+    getAllAppliedJobsController
 } from "../../controllers/job.js";
 const router = Router();
 
+router.get("/applied", getAllAppliedJobsController);
 router.get("/", getAllJobsController);
 router.get("/:jobId", getJobByIdController);
 router.post("/", createJobController);

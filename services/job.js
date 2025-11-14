@@ -64,9 +64,24 @@ export async function applyJobService(user, jobId) {
         if (!job) {
             throw new Error("Job not found");
         }
-        return await jobApplicationRepository.create({student, job, appliedAt: new Date(), status: 'applied'});
+        const existingApplication = await jobApplicationRepository.get({student, jobId});
+        if (existingApplication) {
+            throw new Error("You have already applied for this job");
+        }
+        return await jobApplicationRepository.create({student, job, jobId, appliedAt: new Date(), status: 'applied'});
     } catch (error) {
         console.error("Error in applyJobService:", error);
+        throw error;
+    }
+}
+
+export async function getApplicationStatusService(user, jobId) {
+    try {
+        const student = await studentRepository.get({user});
+        const application = await jobApplicationRepository.get({student, jobId});
+        return application ? "applied" : null;
+    } catch (error) {
+        console.error("Error in getApplicationStatusService:", error);
         throw error;
     }
 }

@@ -12,7 +12,8 @@ import {
     createJobService,
     updateJobService,
     deleteJobService,
-    applyJobService
+    applyJobService,
+    getApplicationStatusService
 } from "../services/job.js";
 
 export async function getAllJobsController(req, res) {
@@ -128,6 +129,28 @@ export async function applyJobController(req, res) {
         return res.status(StatusCodes.OK).json(successResponse(applicationResult, "Successfully applied for the job"));
     } catch (error) {
         console.error("Error applying for job:", error);
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
+    }
+}
+export async function applyStatusController(req, res) {
+    let { jobId } = req.params;
+    jobId = parseInt(jobId);
+    const user = req.user;
+    if (user.role !== "student") {
+        return res.status(StatusCodes.FORBIDDEN).json(customErrorResponse({
+            message: "Forbidden", explanation: "You do not have permission to view application status for this job."
+        }));
+    }
+    try {
+        const applicationStatus = await getApplicationStatusService(user, jobId);
+        if (!applicationStatus) {
+            return res.status(StatusCodes.NOT_FOUND).json(customErrorResponse({
+                message: "Application status not found", explanation: "No application status found for the provided job ID."
+            }));
+        }
+        return res.status(StatusCodes.OK).json(successResponse(applicationStatus, "Application status retrieved successfully"));
+    } catch (error) {
+        console.error("Error retrieving application status:", error);
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(internalErrorResponse(error));
     }
 }

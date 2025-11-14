@@ -8,6 +8,7 @@ const AutoIncrement = sequence(mongoose);
 const jobApplicationSchema = new mongoose.Schema({
   student: { type: mongoose.Schema.Types.ObjectId, ref: 'Student', required: true },
   job: { type: mongoose.Schema.Types.ObjectId, ref: 'JobPosting', required: true },
+  jobId: { type: String, required: true },
   appliedAt: { type: Date, default: Date.now },
   status: { type: String, enum: ['applied', 'shortlisted', 'selected', 'rejected'], default: 'applied' }
 }, { timestamps: true});

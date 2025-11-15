@@ -9,6 +9,10 @@ const studentSchema = new mongoose.Schema({
   yearOfPassing: Number,
   cgpa: Number,
   resumeLink: String,
+  profileImage: String,
+  phone: String,
+  alternateEmail: { type: String },
+  gender: String,
   isVerified: { type: Boolean, default: false }
 }, { timestamps: true });
 

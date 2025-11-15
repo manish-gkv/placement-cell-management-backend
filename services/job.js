@@ -98,6 +98,7 @@ export async function getAppliedJobsService(user) {
             return {
                 applicationId: application.applicationId,
                 jobTitle: job.jobTitle,
+                jobId: job.jobId,
                 companyName: company.companyName,
                 dateApplied: application.appliedAt,
                 status: application.status
